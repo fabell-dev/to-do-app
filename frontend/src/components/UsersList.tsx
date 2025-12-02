@@ -1,8 +1,7 @@
 "use client";
 
 import { use } from "react";
-
-const API_URL = process.env.API_URL || "http://localhost:4000/api";
+import deleteUser from "@/lib/Users/delete";
 
 interface User {
   _id: string;
@@ -21,6 +20,16 @@ interface ApiResponse {
 export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
   const response = use(users);
   const allUsers = response.data;
+
+  const handleDelete = async (id: string) => {
+    if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+      const result = await deleteUser(id);
+
+      if (!result.success) {
+        alert(`Error: ${result.error}`);
+      }
+    }
+  };
 
   //Component
   return (
@@ -42,7 +51,10 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
           >
             <EditIcon />
           </button>
-          <button>
+          <button
+            className="cursor-pointer"
+            onClick={() => handleDelete(user._id)}
+          >
             <DeleteIcon />
           </button>
         </li>
@@ -51,7 +63,7 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
   );
 }
 
-// Componentes de iconos extraídos para mejor legibilidad
+//SVG
 function UserAvatar() {
   return (
     <svg
