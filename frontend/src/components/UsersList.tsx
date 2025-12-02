@@ -21,7 +21,6 @@ interface ApiResponse {
 export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
   const response = use(users);
   const allUsers = response.data;
-  console.log(allUsers);
 
   //Component
   return (
