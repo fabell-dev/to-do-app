@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/components/Navigation.tsx"],"sourcesContent":["export default function Navigatiom() {\n  return <>Navigation</>;\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBAAO;kBAAE;;AACX"}},
-    {"offset": {"line": 29, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/app/page.tsx"],"sourcesContent":["import Link from \"next/link\";\n\nimport Navigation from \"../components/Navigation\";\nimport NotesList from \"../components/NotesList\";\nimport CreateUser from \"../components/CreateUser\";\nimport CreateNote from \"../components/CreateNote\";\n\nexport default function Home() {\n  return (\n    <>\n      <Link href={<Navigation />}>Tocame</Link>\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;AAEA;;;;AAKe,SAAS;IACtB,qBACE;kBACE,cAAA,mcAAC,+YAAI;YAAC,oBAAM,mcAAC,2IAAU;;;;;sBAAK;;;;;;;AAGlC"}}]
-}

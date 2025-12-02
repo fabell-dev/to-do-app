@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/components/Navigatiom.tsx"],"sourcesContent":["export default function Navigatiom() {\n  return <>Navigatiom</>;\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBAAO;kBAAE;;AACX"}},
-    {"offset": {"line": 29, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/app/page.tsx"],"sourcesContent":["import Navigation from \"../components/Navigatiom\";\n\nexport default function Home() {\n  return (\n    <>\n      <Navigation />\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;;;AAEe,SAAS;IACtB,qBACE;kBACE,cAAA,mcAAC,2IAAU;;;;;;AAGjB"}}]
-}
