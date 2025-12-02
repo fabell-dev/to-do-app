@@ -1,53 +1,32 @@
 "use client";
-import { use, useState, useTransition } from "react";
+
+import { use } from "react";
 
 const API_URL = process.env.API_URL || "http://localhost:4000/api";
-
-// DELETE
-async function deleteUser(id: string) {
-  const response = await fetch(`${API_URL}/users/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to delete user: ${response.status}`);
-  }
-
-  return response.json();
-}
 
 interface User {
   _id: string;
   username: string;
   email: string;
+  date_created: string;
+  __v: number;
+}
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: User[];
+  count: number;
 }
 
-export default function UsersList({ users }: { users: Promise<User[]> }) {
-  const initialUsers = use(users);
-  const [usersList, setUsersList] = useState(initialUsers);
-  const [isPending, startTransition] = useTransition();
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("¿Seguro que quieres eliminar este usuario?")) return;
-
-    try {
-      await deleteUser(id);
-      startTransition(() => {
-        setUsersList((prev) => prev.filter((user) => user._id !== id));
-      });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("Error al eliminar el usuario");
-    }
-  };
+export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
+  const response = use(users);
+  const allUsers = response.data;
+  console.log(allUsers);
 
   //Component
   return (
     <ul className="list bg-base-100 rounded-box shadow-md">
-      {usersList.map((user) => (
+      {allUsers.map((user, index) => (
         <li key={user._id} className="list-row">
           <div>
             <UserAvatar />
@@ -64,12 +43,7 @@ export default function UsersList({ users }: { users: Promise<User[]> }) {
           >
             <EditIcon />
           </button>
-          <button
-            onClick={() => handleDelete(user._id)}
-            className="btn btn-square btn-ghost"
-            disabled={isPending}
-            aria-label="Eliminar usuario"
-          >
+          <button>
             <DeleteIcon />
           </button>
         </li>
