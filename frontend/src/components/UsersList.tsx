@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import toast from "react-hot-toast";
 import deleteUser from "@/lib/Users/delete";
 
 interface User {
@@ -26,11 +27,9 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
       const result = await deleteUser(id);
 
       if (result.success) {
-        alert(result.message);
-      }
-
-      if (!result.success) {
-        alert(`Error: ${result.error}`);
+        toast.success(result.message || "Usuario eliminado");
+      } else {
+        toast.error(result.error || "Error al eliminar usuario");
       }
     }
   };

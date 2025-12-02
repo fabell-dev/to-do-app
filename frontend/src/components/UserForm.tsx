@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import createUser from "@/lib/Users/create";
 
 export default function UserForm() {
@@ -20,10 +21,11 @@ export default function UserForm() {
     setIsLoading(false);
 
     if (!result.success) {
-      alert(`Error: ${result.error}`);
+      toast.error(result.error || "Error al crear usuario");
       return;
     }
 
+    toast.success(result.message || "Usuario creado correctamente");
     formRef.current?.reset();
     modalRef.current?.close();
   };
