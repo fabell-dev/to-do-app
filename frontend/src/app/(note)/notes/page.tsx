@@ -2,6 +2,9 @@ import NotesList from "@/components/NotesList";
 import { Suspense } from "react";
 import { getNotes } from "@/lib/notesdata";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function page() {
   const notesPromise = getNotes(); //promise
 
