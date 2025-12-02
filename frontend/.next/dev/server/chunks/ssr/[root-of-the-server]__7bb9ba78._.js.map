@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/lib/notesdata.tsx"],"sourcesContent":["export async function getNotes() {\n  const res = await fetch(\"http://localhost:4000/api/notes\", {\n    next: { revalidate: 60 }, // Revalidar cada minuto\n  });\n\n  if (!res.ok) throw new Error(\"Failed to fetch users\");\n\n  return res.json();\n}\n"],"names":[],"mappings":";;;;AAAO,eAAe;IACpB,MAAM,MAAM,MAAM,MAAM,mCAAmC;QACzD,MAAM;YAAE,YAAY;QAAG;IACzB;IAEA,IAAI,CAAC,IAAI,EAAE,EAAE,MAAM,IAAI,MAAM;IAE7B,OAAO,IAAI,IAAI;AACjB"}},
+    {"offset": {"line": 31, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/app/%28note%29/noteslist/page.tsx"],"sourcesContent":["import NotesList from \"@/components/UsersList\";\nimport { Suspense } from \"react\";\nimport { getNotes } from \"@/lib/notesdata\";\n\nexport default async function NotesList() {\n  const notesPromise = getNotes(); //promise\n\n  return (\n    <Suspense fallback={<div>Loading...</div>}>\n      <NotesList notes={notesPromise} />\n    </Suspense>\n  );\n}\n"],"names":[],"mappings":";;;;;AACA;AACA;;;;AAEe,eAAe;IAC5B,MAAM,eAAe,IAAA,oIAAQ,KAAI,SAAS;IAE1C,qBACE,mcAAC,saAAQ;QAAC,wBAAU,mcAAC;sBAAI;;;;;;kBACvB,cAAA,mcAAC;YAAU,OAAO;;;;;;;;;;;AAGxB"}}]
+}

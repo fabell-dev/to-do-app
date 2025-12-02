@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/fabian/Code/Proyect/frontend/src/app/%28user%29/createuser/page.tsx"],"sourcesContent":["import Link from \"next/link\";\nimport NavBar from \"@/components/NavBar\";\n\nexport async function getServerSideProps() {\n  // Se ejecuta en el servidor\n  const datos = await fetch(\"http://localhost:4000/api/users\");\n  return { props: { datos } };\n}\nexport default function CreateUser({ datos }) {\n  return (\n    <>\n      <div>{datos}</div>\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;;;;AAGO,eAAe;IACpB,4BAA4B;IAC5B,MAAM,QAAQ,MAAM,MAAM;IAC1B,OAAO;QAAE,OAAO;YAAE;QAAM;IAAE;AAC5B;AACe,SAAS,WAAW,EAAE,KAAK,EAAE;IAC1C,qBACE;kBACE,cAAA,mcAAC;sBAAK;;;;;;;AAGZ"}}]
+}
