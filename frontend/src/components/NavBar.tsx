@@ -32,13 +32,18 @@ export default function NavBar() {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">Note App</a>
+          <Link href=".." className="btn btn-ghost text-xl">
+            Note App
+          </Link>
         </div>
         {/* OPTIONS */}
         <div className="navbar-end hidden lg:flex mr-10">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link href="/createnote">Create Note</Link>
+              <Link href="/notes">Notes</Link>
+            </li>
+            <li>
+              <Link href="/users">Users</Link>
             </li>
           </ul>
         </div>

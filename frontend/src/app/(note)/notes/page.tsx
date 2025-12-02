@@ -1,3 +1,4 @@
+import NavBar from "@/components/NavBar";
 import NotesList from "@/components/NotesList";
 import { Suspense } from "react";
 
@@ -17,8 +18,11 @@ export default function page() {
 
   return (
     <>
-      <h1>Notas</h1>
-      <Suspense fallback={<div>Loading...</div>}>
+      <NavBar />
+      <div className="flex flex-col w-100dvw items-center text-5xl my-10">
+        <h1>NOTES</h1>
+      </div>
+      <Suspense fallback={<div className="bg-base-100">Loading...</div>}>
         <NotesList notes={notesPromise} />
       </Suspense>
     </>

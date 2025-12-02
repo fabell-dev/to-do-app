@@ -1,8 +1,12 @@
+import NavBar from "@/components/NavBar";
+import UserForm from "@/components/UserForm";
+import UsersHeader from "@/components/UsersHeader";
 import UsersList from "@/components/UsersList";
 import { Suspense } from "react";
 
 const API_URL = process.env.API_URL || "http://localhost:4000/api";
 
+//Fetch Users and Pass it as a promise
 export async function getUsers() {
   const res = await fetch(`${API_URL}/users`, {
     cache: "no-store",
@@ -18,7 +22,8 @@ export default function page() {
 
   return (
     <>
-      <h1>Usuarios</h1>
+      <NavBar />
+      <UsersHeader />
       <Suspense fallback={<div>Loading...</div>}>
         <UsersList users={usersPromise} />
       </Suspense>

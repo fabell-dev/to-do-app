@@ -20,7 +20,7 @@ export default function Notes({ notes }: { notes: Promise<ApiResponse> }) {
   const allNotes = response.data;
 
   return (
-    <ul>
+    <ul className="bg-base-100">
       {allNotes.map((note, index) => (
         <li
           key={index}
