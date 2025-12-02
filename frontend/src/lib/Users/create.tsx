@@ -21,13 +21,20 @@ export default async function createUser(userdata: {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create user: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to create user: ${response.status}`
+      );
     }
 
+    const data = await response.json();
     console.log("User created successfully!");
     revalidatePath("/users");
 
-    return { success: true, message: "Usuario creado correctamente" };
+    return {
+      success: true,
+      message: data.message || "Usuario creado correctamente",
+    };
   } catch (error) {
     console.error("Network error:", error);
 
