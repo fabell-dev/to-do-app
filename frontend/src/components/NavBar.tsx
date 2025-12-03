@@ -28,6 +28,9 @@ export default function NavBar() {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
+                <Link href="/users">Users</Link>
+              </li>
+              <li>
                 <Link href="/profile">Profile</Link>
               </li>
             </ul>
@@ -39,9 +42,6 @@ export default function NavBar() {
         {/* OPTIONS */}
         <div className="navbar-end hidden lg:flex mr-10">
           <ul className="menu menu-horizontal px-1">
-            <li>
-              <Link href="/notes">Notes</Link>
-            </li>
             <li>
               <Link href="/users">Users</Link>
             </li>
