@@ -1,12 +1,12 @@
 "use client";
-import UserModal from "./UserForm";
+import UserForm from "./UserForm";
 
 export default function UsersHeader() {
   return (
     <div className="flex text-5xl my-10 items-center">
       <h1 className="flex-1 text-center">USERS</h1>
       <div className="absolute right-5 p-2 btn btn-square btn-ghost h-15 w-15">
-        <UserModal
+        <UserForm
           mode="create"
           trigger={
             <button className="btn btn-square btn-ghost h-15 w-15 rounded-2xl">

@@ -1,8 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import createUser from "@/lib/Users/create";
-import updateUser from "@/lib/Users/put";
+import { createUser, updateUser } from "@/lib/userOptions";
 
 interface UserModalProps {
   mode: "create" | "edit";
@@ -15,7 +14,7 @@ interface UserModalProps {
   onSuccess?: () => void;
 }
 
-export default function UserModal({
+export default function UserForm({
   mode,
   user,
   trigger,

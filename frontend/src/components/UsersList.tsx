@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import toast from "react-hot-toast";
-import deleteUser from "@/lib/Users/delete";
+import { deleteUser } from "@/lib/userOptions";
 import UserModal from "./UserForm";
 
 interface User {
