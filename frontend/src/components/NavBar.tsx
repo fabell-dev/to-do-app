@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ThemeController from "./ThemeController";
 
 export default function NavBar() {
   return (
@@ -42,8 +43,11 @@ export default function NavBar() {
         {/* OPTIONS */}
         <div className="navbar-end hidden lg:flex mr-10">
           <ul className="menu menu-horizontal px-1">
-            <li>
+            <li className="self-center text-2xl">
               <Link href="/users">Users</Link>
+            </li>
+            <li>
+              <ThemeController />
             </li>
           </ul>
         </div>

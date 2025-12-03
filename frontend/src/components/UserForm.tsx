@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { createUser, updateUser } from "@/lib/userOptions";
+import { createUser, updateUser } from "@/lib/usersOptions";
 
 interface UserModalProps {
   mode: "create" | "edit";
