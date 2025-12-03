@@ -1,58 +1,89 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import createUser from "@/lib/Users/create";
+import updateUser from "@/lib/Users/put";
 
-export default function UserForm() {
+interface UserModalProps {
+  mode: "create" | "edit";
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+  };
+  trigger: React.ReactNode;
+  onSuccess?: () => void;
+}
+
+export default function UserModal({
+  mode,
+  user,
+  trigger,
+  onSuccess,
+}: UserModalProps) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (mode === "edit" && user && formRef.current) {
+      const form = formRef.current;
+      (form.elements.namedItem("username") as HTMLInputElement).value =
+        user.username;
+      (form.elements.namedItem("email") as HTMLInputElement).value = user.email;
+    }
+  }, [mode, user]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
 
-    const result = await createUser({
+    const userData = {
       username: formData.get("username") as string,
       email: formData.get("email") as string,
-    });
+    };
+
+    const result =
+      mode === "create"
+        ? await createUser(userData)
+        : await updateUser(user!.id, userData);
 
     setIsLoading(false);
 
     if (!result.success) {
-      toast.error(result.error || "Error al crear usuario");
+      toast.error(
+        result.error ||
+          `Error al ${mode === "create" ? "crear" : "actualizar"} usuario`
+      );
       return;
     }
 
-    toast.success(result.message || "Usuario creado correctamente");
+    toast.success(
+      result.message ||
+        `Usuario ${mode === "create" ? "creado" : "actualizado"} correctamente`
+    );
     formRef.current?.reset();
     modalRef.current?.close();
+    onSuccess?.();
   };
 
   return (
     <>
-      <button onClick={() => modalRef.current?.showModal()}>
-        <svg
-          className="h-10 w-10"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M8 12h8M12 8v8" />
-        </svg>
-      </button>
+      <div onClick={() => modalRef.current?.showModal()}>{trigger}</div>
 
       <dialog ref={modalRef} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">Crear Usuario</h3>
+          <h3 className="font-bold text-lg mb-4">
+            {mode === "create" ? "Crear Usuario" : "Editar Usuario"}
+          </h3>
 
           <form ref={formRef} onSubmit={handleSubmit}>
             <input
               name="username"
               placeholder="Username"
               className="input input-bordered w-full mb-4"
+              defaultValue={user?.username}
               required
             />
             <input
@@ -60,6 +91,7 @@ export default function UserForm() {
               type="email"
               placeholder="Email"
               className="input input-bordered w-full mb-4"
+              defaultValue={user?.email}
               required
             />
 
@@ -69,7 +101,11 @@ export default function UserForm() {
                 className="btn btn-primary"
                 disabled={isLoading}
               >
-                {isLoading ? "Creando..." : "Crear"}
+                {isLoading
+                  ? "Guardando..."
+                  : mode === "create"
+                  ? "Crear"
+                  : "Actualizar"}
               </button>
               <button
                 type="button"

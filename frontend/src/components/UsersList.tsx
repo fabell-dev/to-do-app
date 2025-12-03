@@ -3,6 +3,7 @@
 import { use } from "react";
 import toast from "react-hot-toast";
 import deleteUser from "@/lib/Users/delete";
+import UserModal from "./UserForm";
 
 interface User {
   _id: string;
@@ -37,7 +38,7 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
   //Component
   return (
     <ul className="list bg-base-100  shadow-md">
-      {allUsers.map((user, index) => (
+      {allUsers.map((user) => (
         <li key={user._id} className="list-row">
           <div>
             <UserAvatar />
@@ -48,14 +49,24 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
               {user.email}
             </div>
           </div>
+
+          <UserModal
+            mode="edit"
+            user={{
+              id: user._id,
+              username: user.username,
+              email: user.email,
+            }}
+            trigger={
+              <button className="btn btn-square btn-ghost h-15 w-15 rounded-2xl">
+                <EditIcon />
+              </button>
+            }
+          />
+
           <button
-            className="btn btn-square btn-ghost"
-            aria-label="Editar usuario"
-          >
-            <EditIcon />
-          </button>
-          <button
-            className="cursor-pointer"
+            className="btn btn-square btn-ghost h-15 w-15 rounded-2xl"
+            aria-label="Eliminar usuario"
             onClick={() => handleDelete(user._id)}
           >
             <DeleteIcon />
@@ -90,6 +101,7 @@ function UserAvatar() {
 function EditIcon() {
   return (
     <svg
+      className="h-8 w-8"
       width="24"
       height="24"
       stroke="gray"
@@ -109,7 +121,7 @@ function EditIcon() {
 
 function DeleteIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 -0.5 21 21">
+    <svg className="h-8 w-8" width="24" height="24" viewBox="0 -0.5 21 21">
       <g stroke="gray" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-179.000000, -360.000000)" fill="#000000">
           <g transform="translate(56.000000, 160.000000)">

@@ -1,5 +1,4 @@
 import NavBar from "@/components/NavBar";
-import UserForm from "@/components/UserForm";
 import UsersHeader from "@/components/UsersHeader";
 import UsersList from "@/components/UsersList";
 import { Suspense } from "react";
