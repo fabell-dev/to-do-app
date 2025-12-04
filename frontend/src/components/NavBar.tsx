@@ -4,7 +4,7 @@ import ThemeController from "./ThemeController";
 export default function NavBar() {
   return (
     <>
-      <div className="navbar bg-base-100 shadow-sm">
+      <div className="navbar border-b-2 border-secondary rounded-b-2xl">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -42,14 +42,15 @@ export default function NavBar() {
         </div>
         {/* OPTIONS */}
         <div className="navbar-end hidden lg:flex mr-10">
-          <ul className="menu menu-horizontal px-1">
-            <li className="self-center text-2xl">
-              <Link href="/users">Users</Link>
-            </li>
-            <li>
-              <ThemeController />
-            </li>
-          </ul>
+          <Link
+            className="btn btn-square btn-ghost px-10 py-7 rounded-2xl text-2xl"
+            href="/users"
+          >
+            Users
+          </Link>
+          <div className="ml-5">
+            <ThemeController />
+          </div>
         </div>
       </div>
     </>

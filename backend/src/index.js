@@ -7,8 +7,8 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Validar que las variables críticas existan
-if (!process.env.MONGODB_URL) {
-  console.error("ERROR: MONGODB_URL no está definida");
+if (!process.env.MONGO_URL) {
+  console.error("ERROR: MONGO_URL no está definida");
   process.exit(1);
 }
 

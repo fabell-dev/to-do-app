@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const URL = process.env.MONGODB_URL;
-const URL_LOCAL = "mongodb://localhost:27017/proyect-mern-stack";
+const URL = process.env.MONGO_URL;
 
 mongoose
   .connect(URL)

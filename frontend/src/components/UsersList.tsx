@@ -37,13 +37,13 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
 
   //Component
   return (
-    <ul className="list bg-base-100  shadow-md">
+    <ul className="list shadow-md">
       {allUsers.map((user) => (
         <li key={user._id} className="list-row">
           <div>
             <UserAvatar />
           </div>
-          <div>
+          <div className="cursor-default">
             <div>{user.username}</div>
             <div className="text-xs uppercase font-semibold opacity-60">
               {user.email}
