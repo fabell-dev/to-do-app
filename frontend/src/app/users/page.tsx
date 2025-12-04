@@ -1,6 +1,6 @@
 import NavBar from "@/components/NavBar";
-import UsersHeader from "@/components/UsersHeader";
-import UsersList from "@/components/UsersList";
+import UsersList from "@/components/Users/UsersList";
+import UsersHeader from "@/components/Users/UsersHeader";
 import { Suspense } from "react";
 
 export default function page() {

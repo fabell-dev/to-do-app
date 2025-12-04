@@ -27,17 +27,16 @@ notesCtrl.postNotes = async (req, res) => {
     const { title, content, author } = req.body;
 
     // Validar campos requeridos
-    if (!title || !content || !author) {
+    if (!title || !content) {
       return res.status(400).json({
         success: false,
-        message: "Title, content and author are required",
+        message: "Title and content are required",
       });
     }
 
     const note = new NoteModel({
       title,
       content,
-      author,
     });
     await note.save();
 
@@ -91,7 +90,6 @@ notesCtrl.updateNote = async (req, res) => {
       {
         title,
         content,
-        author,
         date_modified: new Date(),
       },
       { new: true, runValidators: true }

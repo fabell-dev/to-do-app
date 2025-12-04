@@ -1,5 +1,6 @@
 import NavBar from "@/components/NavBar";
-import NotesList from "@/components/NotesList";
+import NotesList from "@/components/Notes/NotesList";
+import NotesHeader from "@/components/Notes/NotesHeader";
 import "../../globals.css";
 import { Suspense } from "react";
 
@@ -9,9 +10,7 @@ export default function page() {
   return (
     <>
       <NavBar />
-      <div className="flex flex-col w-100dvw items-center text-5xl my-10">
-        <h1>NOTES</h1>
-      </div>
+      <NotesHeader />
       <Suspense fallback={<div className="bg-base-100">Loading...</div>}>
         <NotesList notes={notesPromise} />
       </Suspense>

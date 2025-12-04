@@ -10,9 +10,6 @@ const noteSchema = new Schema({
     type: String,
     required: true,
   },
-  author: String,
-  date_created: { type: Date, default: Date.now },
-  date_modified: { type: Date },
 });
 
 module.exports = model("note", noteSchema);
