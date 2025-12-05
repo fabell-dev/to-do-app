@@ -1,14 +1,14 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { createNote, updateNote } from "@/lib/notesOptions";
+import { createNote, deleteNote, updateNote } from "@/lib/notesOptions";
 
 interface UserModalProps {
-  mode: "create" | "edit";
+  mode?: "create" | "edit";
   note?: {
     id: string;
-    title: string;
-    content: string;
+    title?: string;
+    content?: string;
   };
   trigger: React.ReactNode;
   onSuccess?: () => void;
@@ -27,9 +27,10 @@ export default function NoteForm({
   useEffect(() => {
     if (mode === "edit" && note && formRef.current) {
       const form = formRef.current;
-      (form.elements.namedItem("title") as HTMLInputElement).value = note.title;
+      (form.elements.namedItem("title") as HTMLInputElement).value =
+        note.title || "";
       (form.elements.namedItem("content") as HTMLInputElement).value =
-        note.content;
+        note.content || "";
     }
   }, [mode, note]);
 
@@ -95,8 +96,16 @@ export default function NoteForm({
 
             <div className="modal-action">
               <button
+                type="button"
+                className="btn"
+                onClick={() => modalRef.current?.close()}
+                disabled={isLoading}
+              >
+                Cancelar
+              </button>
+              <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-accent"
                 disabled={isLoading}
               >
                 {isLoading
@@ -105,16 +114,61 @@ export default function NoteForm({
                   ? "Crear"
                   : "Actualizar"}
               </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => modalRef.current?.close()}
-                disabled={isLoading}
-              >
-                Cancelar
-              </button>
             </div>
           </form>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    </>
+  );
+}
+
+export function DeleteForm({ note, trigger, onSuccess }: UserModalProps) {
+  const modalRef = useRef<HTMLDialogElement>(null);
+
+  const handleDelete = async () => {
+    const result = await deleteNote(note!.id);
+
+    if (!result.success) {
+      toast.error(result.error || `Error al eliminar nota`);
+      modalRef.current?.close();
+      return;
+    }
+
+    toast.success(result.message || `Nota eliminada correctamente`);
+    modalRef.current?.close();
+    onSuccess?.();
+  };
+
+  return (
+    <>
+      <div onClick={() => modalRef.current?.showModal()}>{trigger}</div>
+
+      <dialog ref={modalRef} className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Eliminar Nota</h3>
+          <p className="mb-4">
+            ¿Estás seguro de que deseas eliminar esta nota?
+          </p>
+
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => modalRef.current?.close()}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="btn btn-error"
+            >
+              Eliminar
+            </button>
+          </div>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>

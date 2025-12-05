@@ -54,8 +54,6 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
           <DeleteForm
             user={{
               id: user._id,
-              username: "",
-              email: "",
             }}
             trigger={
               <button className="btn btn-square btn-ghost h-15 w-15 rounded-2xl">

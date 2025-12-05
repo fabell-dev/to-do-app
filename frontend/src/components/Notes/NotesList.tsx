@@ -1,6 +1,6 @@
 "use client";
 import { use } from "react";
-import NoteForm from "./NoteForm";
+import NoteForm, { DeleteForm } from "./NoteForm";
 import toast from "react-hot-toast";
 import { deleteNote } from "@/lib/notesOptions";
 
@@ -45,13 +45,16 @@ export default function Notes({ notes }: { notes: Promise<ApiResponse> }) {
                 </button>
               }
             />
-            <button
-              className="btn btn-square btn-ghost h-15 w-15 rounded-2xl"
-              aria-label="Eliminar nota"
-              onClick={() => handleDelete(note._id)}
-            >
-              <DeleteIcon />
-            </button>
+            <DeleteForm
+              note={{
+                id: note._id,
+              }}
+              trigger={
+                <button className="btn btn-square btn-ghost h-15 w-15 rounded-2xl">
+                  <DeleteIcon />
+                </button>
+              }
+            />
           </div>
         </li>
       ))}

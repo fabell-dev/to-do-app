@@ -5,10 +5,10 @@ import { createUser, updateUser, deleteUser } from "@/lib/usersOptions";
 
 interface UserModalProps {
   mode?: "create" | "edit";
-  user: {
+  user?: {
     id: string;
-    username: string;
-    email: string;
+    username?: string;
+    email?: string;
   };
   trigger: React.ReactNode;
   onSuccess?: () => void;
@@ -28,8 +28,9 @@ export default function UserForm({
     if (mode === "edit" && user && formRef.current) {
       const form = formRef.current;
       (form.elements.namedItem("username") as HTMLInputElement).value =
-        user.username;
-      (form.elements.namedItem("email") as HTMLInputElement).value = user.email;
+        user.username || "";
+      (form.elements.namedItem("email") as HTMLInputElement).value =
+        user.email || "";
     }
   }, [mode, user]);
 
@@ -82,7 +83,7 @@ export default function UserForm({
               name="username"
               placeholder="Username"
               className="input input-bordered w-full mb-4"
-              defaultValue={user?.username}
+              defaultValue={user?.username || ""}
               required
             />
             <input
@@ -90,7 +91,7 @@ export default function UserForm({
               type="email"
               placeholder="Email"
               className="input input-bordered w-full mb-4"
-              defaultValue={user?.email}
+              defaultValue={user?.email || ""}
               required
             />
 
@@ -125,7 +126,7 @@ export default function UserForm({
   );
 }
 
-///DElete--------
+///DELETE--------
 export function DeleteForm({ user, trigger, onSuccess }: UserModalProps) {
   const modalRef = useRef<HTMLDialogElement>(null);
 
