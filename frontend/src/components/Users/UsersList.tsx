@@ -1,12 +1,11 @@
 "use client";
 
 import { use } from "react";
-import toast from "react-hot-toast";
-import { deleteUser } from "@/lib/usersOptions";
 import UserModal, { DeleteForm } from "./UserForm";
 
 interface User {
   _id: string;
+  name?: string;
   username: string;
   email: string;
   date_created: string;
@@ -42,6 +41,7 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
             mode="edit"
             user={{
               id: user._id,
+              name: user.name,
               username: user.username,
               email: user.email,
             }}

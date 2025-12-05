@@ -2,6 +2,11 @@ const { Timestamp } = require("mongodb");
 const { Schema, Model, model } = require("mongoose");
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    required: false,
+    trim: true, //Limpia espacios innecesarios
+  },
   username: {
     type: String,
     required: true,
@@ -9,6 +14,10 @@ const userSchema = new Schema({
     unique: true, //Se explica sola
   },
   email: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },

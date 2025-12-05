@@ -7,6 +7,7 @@ interface UserModalProps {
   mode?: "create" | "edit";
   user?: {
     id: string;
+    name?: string;
     username?: string;
     email?: string;
   };
@@ -27,6 +28,8 @@ export default function UserForm({
   useEffect(() => {
     if (mode === "edit" && user && formRef.current) {
       const form = formRef.current;
+      (form.elements.namedItem("name") as HTMLInputElement).value =
+        user.name || "";
       (form.elements.namedItem("username") as HTMLInputElement).value =
         user.username || "";
       (form.elements.namedItem("email") as HTMLInputElement).value =
@@ -40,13 +43,17 @@ export default function UserForm({
     const formData = new FormData(e.currentTarget);
 
     const userData = {
+      name: formData.get("name") as string,
       username: formData.get("username") as string,
       email: formData.get("email") as string,
+      ...(mode === "create" && {
+        password: formData.get("password") as string,
+      }),
     };
 
     const result =
       mode === "create"
-        ? await createUser(userData)
+        ? await createUser(userData as any)
         : await updateUser(user!.id, userData);
 
     setIsLoading(false);
@@ -80,6 +87,13 @@ export default function UserForm({
 
           <form ref={formRef} onSubmit={handleSubmit}>
             <input
+              name="name"
+              placeholder="Jhon Doe"
+              className="input input-bordered w-full mb-4"
+              defaultValue={user?.name || ""}
+              required
+            />
+            <input
               name="username"
               placeholder="Username"
               className="input input-bordered w-full mb-4"
@@ -94,7 +108,15 @@ export default function UserForm({
               defaultValue={user?.email || ""}
               required
             />
-
+            {mode === "create" && (
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="input input-bordered w-full mb-4"
+                required
+              />
+            )}
             <div className="modal-action">
               <button
                 type="button"

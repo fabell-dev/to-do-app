@@ -5,12 +5,16 @@ const API_URL = process.env.API_URL || "http://localhost:4000/api";
 
 //CREATE
 export async function createUser(userdata: {
+  name: string;
   username: string;
   email: string;
+  password: string;
 }) {
   const postData = {
+    name: userdata.name,
     username: userdata.username,
     email: userdata.email,
+    password: userdata.password,
   };
   try {
     const response = await fetch(`${API_URL}/users`, {
@@ -75,6 +79,7 @@ export async function deleteUser(id: string) {
 export async function updateUser(
   id: string,
   userdata: {
+    name?: string;
     username: string;
     email: string;
   }

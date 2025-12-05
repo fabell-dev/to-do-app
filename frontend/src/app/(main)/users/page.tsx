@@ -1,4 +1,3 @@
-import NavBar from "@/components/NavBar";
 import UsersList from "@/components/Users/UsersList";
 import UsersHeader from "@/components/Users/UsersHeader";
 import { Suspense } from "react";
@@ -8,7 +7,6 @@ export default function page() {
 
   return (
     <>
-      <NavBar />
       <UsersHeader />
       <Suspense fallback={<div>Loading...</div>}>
         <UsersList users={usersPromise} />

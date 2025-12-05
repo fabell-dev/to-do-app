@@ -24,13 +24,13 @@ usersCtrl.getUsers = async (req, res) => {
 //POST
 usersCtrl.postUsers = async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { name, username, email, password } = req.body;
 
     // Validar campos requeridos
-    if (!username || !email) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Username and email are required",
+        message: "Username,email and pasword are required",
       });
     }
 
@@ -44,7 +44,7 @@ usersCtrl.postUsers = async (req, res) => {
       });
     }
 
-    const user = new UserModel({ username, email });
+    const user = new UserModel({ name, username, email, password });
     await user.save();
 
     return res.status(201).json({
@@ -90,7 +90,7 @@ usersCtrl.getUser = async (req, res) => {
 //UPDATE
 usersCtrl.updateUser = async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { name, username, email, password } = req.body;
 
     // Verificar si el nuevo username ya existe (excepto el mismo usuario)
     if (username) {
@@ -110,8 +110,10 @@ usersCtrl.updateUser = async (req, res) => {
     const user = await UserModel.findByIdAndUpdate(
       req.params.id,
       {
+        name,
         username,
         email,
+        password,
         date_modified: new Date(),
       },
       { new: true, runValidators: true }

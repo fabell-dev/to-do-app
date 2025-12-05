@@ -24,13 +24,6 @@
   --color-base-300: #fefcfb; /*Fade Color 3*/
 }
 
-html {
-  background-color: var(--color-primary);
-  scroll-behavior: smooth;
-  padding: 0;
-  margin: 0;
-}
-
 body {
   padding: 0;
   margin: 0;
