@@ -1,11 +1,11 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { createUser, updateUser } from "@/lib/usersOptions";
+import { createUser, updateUser, deleteUser } from "@/lib/usersOptions";
 
 interface UserModalProps {
-  mode: "create" | "edit";
-  user?: {
+  mode?: "create" | "edit";
+  user: {
     id: string;
     username: string;
     email: string;
@@ -96,8 +96,16 @@ export default function UserForm({
 
             <div className="modal-action">
               <button
+                type="button"
+                className="btn"
+                onClick={() => modalRef.current?.close()}
+                disabled={isLoading}
+              >
+                Cancelar
+              </button>
+              <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-accent"
                 disabled={isLoading}
               >
                 {isLoading
@@ -106,19 +114,64 @@ export default function UserForm({
                   ? "Crear"
                   : "Actualizar"}
               </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => modalRef.current?.close()}
-                disabled={isLoading}
-              >
-                Cancelar
-              </button>
             </div>
           </form>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
+        </form>
+      </dialog>
+    </>
+  );
+}
+
+///DElete--------
+export function DeleteForm({ user, trigger, onSuccess }: UserModalProps) {
+  const modalRef = useRef<HTMLDialogElement>(null);
+
+  const handleDelete = async () => {
+    const result = await deleteUser(user!.id);
+
+    if (!result.success) {
+      toast.error(result.error || `Error al eliminar usuario`);
+      return;
+    }
+
+    toast.success(result.message || `Usuario eliminado correctamente`);
+    modalRef.current?.close();
+    onSuccess?.();
+  };
+
+  return (
+    <>
+      <div onClick={() => modalRef.current?.showModal()}>{trigger}</div>
+
+      <dialog ref={modalRef} className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Eliminar Usuario</h3>
+          <p className="mb-4">
+            ¿Estás seguro de que deseas eliminar este usuario?
+          </p>
+
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => modalRef.current?.close()}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="btn btn-error"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button type="button">Cerrar</button>
         </form>
       </dialog>
     </>

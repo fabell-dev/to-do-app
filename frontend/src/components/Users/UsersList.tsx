@@ -3,7 +3,7 @@
 import { use } from "react";
 import toast from "react-hot-toast";
 import { deleteUser } from "@/lib/usersOptions";
-import UserModal from "./UserForm";
+import UserModal, { DeleteForm } from "./UserForm";
 
 interface User {
   _id: string;
@@ -22,18 +22,6 @@ interface ApiResponse {
 export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
   const response = use(users);
   const allUsers = response.data;
-
-  const handleDelete = async (id: string) => {
-    if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
-      const result = await deleteUser(id);
-
-      if (result.success) {
-        toast.success(result.message || "Usuario eliminado");
-      } else {
-        toast.error(result.error || "Error al eliminar usuario");
-      }
-    }
-  };
 
   //Component
   return (
@@ -63,14 +51,18 @@ export default function UsersList({ users }: { users: Promise<ApiResponse> }) {
               </button>
             }
           />
-
-          <button
-            className="btn btn-square btn-ghost h-15 w-15 rounded-2xl"
-            aria-label="Eliminar usuario"
-            onClick={() => handleDelete(user._id)}
-          >
-            <DeleteIcon />
-          </button>
+          <DeleteForm
+            user={{
+              id: user._id,
+              username: "",
+              email: "",
+            }}
+            trigger={
+              <button className="btn btn-square btn-ghost h-15 w-15 rounded-2xl">
+                <DeleteIcon />
+              </button>
+            }
+          />
         </li>
       ))}
     </ul>
@@ -131,4 +123,14 @@ function DeleteIcon() {
       </g>
     </svg>
   );
+}
+
+{
+  /* <button
+  className="btn btn-square btn-ghost h-15 w-15 rounded-2xl"
+  aria-label="Eliminar usuario"
+  onClick={() => handleDelete(user._id)}
+>
+  <DeleteIcon />
+</button>; */
 }
