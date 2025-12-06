@@ -5,7 +5,6 @@ export const SigninFormSchema = z.object({
     .string()
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username must be less than 20 characters"),
-  email: z.email("Please enter a valid email address"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -42,7 +41,7 @@ export const SignupFormSchema = z
 export type SigninFormValues = z.infer<typeof SigninFormSchema>;
 export type SignupFormValues = z.infer<typeof SignupFormSchema>;
 
-export type FormState = {
+export type SignupFormState = {
   success?: boolean;
   message?: string | boolean;
   data?: {

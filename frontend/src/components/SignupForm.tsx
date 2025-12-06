@@ -182,7 +182,7 @@ export default function SignupForm() {
           </label>
 
           <button className="btn btn-neutral mt-4" type="submit">
-            Login
+            Create Account
           </button>
           <p className="mt-1 justify-self-center textarea-xs">
             Ya tengo una cuenta

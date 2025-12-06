@@ -4,9 +4,9 @@ import Link from "next/link";
 import FormError from "./FormError";
 import { actions } from "@/actions";
 import { useActionState } from "react";
-import { type FormState } from "@/validations/sign";
+import { type SignupFormState } from "@/validations/sign";
 
-const INITIAL_STATE: FormState = {
+const INITIAL_STATE: SignupFormState = {
   success: false,
   message: undefined,
   data: {
@@ -28,12 +28,12 @@ export default function SiginForm() {
       action={formAction}
     >
       <fieldset className="fieldset">
-        <label className="label">Email</label>
+        <label className="label">Username</label>
         <input
           className="input validator"
           name="username"
           type="text"
-          placeholder="username"
+          placeholder="JhonDoe2002"
           defaultValue={formState.data?.username ?? ""}
           required
         />
