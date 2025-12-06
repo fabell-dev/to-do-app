@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const SigninFormSchema = z.object({
-  username: z
+  identifier: z
     .string()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be less than 20 characters"),
+    .min(1, "Usuario o email requerido")
+    .max(20, "Debe tener menos de 20 caracteres"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -59,5 +59,19 @@ export type SignupFormState = {
     email?: string[];
     password?: string[];
     cpassword?: string[];
+  } | null;
+};
+
+//SignIn
+export type SigninFormState = {
+  success?: boolean;
+  message?: string | boolean;
+  data?: {
+    identifier?: string;
+    password?: string;
+  };
+  Errors?: {
+    identifier?: string[];
+    password?: string[];
   } | null;
 };

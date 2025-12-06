@@ -1,10 +1,11 @@
 const usersCtrl = {};
 const UserModel = require("../models/users.model");
+const bcrypt = require("bcrypt");
 
 //GET(ALL)
 usersCtrl.getUsers = async (req, res) => {
   try {
-    const users = await UserModel.find();
+    const users = await UserModel.find().select("-password"); // Excluir password
 
     return res.status(200).json({
       success: true,
@@ -30,27 +31,44 @@ usersCtrl.postUsers = async (req, res) => {
     if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Username,email and pasword are required",
+        message: "Username, email and password are required",
       });
     }
 
     // Verificar si el usuario ya existe
-    const existingUser = await UserModel.findOne({ username });
+    const existingUser = await UserModel.findOne({
+      $or: [{ username }, { email }],
+    });
 
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: "Username already exists",
+        message:
+          existingUser.username === username
+            ? "Username already exists"
+            : "Email already exists",
       });
     }
 
-    const user = new UserModel({ name, username, email, password });
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new UserModel({
+      name,
+      username,
+      email,
+      password: hashedPassword,
+    });
     await user.save();
+
+    // Retornar usuario sin la contraseña
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
     return res.status(201).json({
       success: true,
       message: "User created successfully",
-      data: user,
+      data: userResponse,
     });
   } catch (error) {
     return res.status(500).json({
@@ -64,7 +82,7 @@ usersCtrl.postUsers = async (req, res) => {
 //GET(ONE)
 usersCtrl.getUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id);
+    const user = await UserModel.findById(req.params.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -107,17 +125,23 @@ usersCtrl.updateUser = async (req, res) => {
       }
     }
 
-    const user = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        username,
-        email,
-        password,
-        date_modified: new Date(),
-      },
-      { new: true, runValidators: true }
-    );
+    // Preparar datos de actualización
+    const updateData = {
+      name,
+      username,
+      email,
+      date_modified: new Date(),
+    };
+
+    // Si se envía una nueva contraseña, hashearla
+    if (password && password.trim() !== "") {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    const user = await UserModel.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -162,6 +186,58 @@ usersCtrl.deleteUser = async (req, res) => {
       success: false,
       message: "Error deleting user",
       error: error.message,
+    });
+  }
+};
+
+//LOGIN
+usersCtrl.loginUser = async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+
+    if (!identifier || !password) {
+      return res.status(400).json({
+        error: "Se requiere usuario/email y contraseña",
+      });
+    }
+
+    // Buscar usuario por email O username
+    const user = await UserModel.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        errorIdentifier: "Usuario o email no encontrado",
+        errorPassword: "",
+      });
+    }
+
+    // Comparar contraseña usando bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        errorIdentifier: "",
+        errorPassword: "Contraseña incorrecta",
+      });
+    }
+
+    // Login exitoso - retornar usuario sin contraseña
+    return res.status(200).json({
+      success: true,
+      message: "Login exitoso",
+      user: {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Error en el servidor",
+      details: error.message,
     });
   }
 };

@@ -4,9 +4,9 @@ import Link from "next/link";
 import FormError from "./FormError";
 import { actions } from "@/actions";
 import { useActionState, useEffect, useState } from "react";
-import { type FormState, SignupFormSchema } from "@/validations/sign";
+import { SignupFormSchema, type SignupFormState } from "@/validations/sign";
 
-const INITIAL_STATE: FormState = {
+const INITIAL_STATE: SignupFormState = {
   success: false,
   message: undefined,
   data: {
@@ -24,7 +24,7 @@ export default function SignupForm() {
     actions.auth.registerUserAction,
     INITIAL_STATE
   );
-
+  const [visible, setVisible] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<
     Record<string, { hasError: boolean; message?: string }>
   >({});
@@ -156,15 +156,26 @@ export default function SignupForm() {
 
           <label className="fieldset">
             <span className="label">Password</span>
-            <input
-              type="password"
-              className={getInputClass("password")}
-              placeholder="Password"
-              name="password"
-              defaultValue={formState.data?.password ?? ""}
-              onChange={(e) => validateField("password", e.target.value)}
-              required
-            />
+            <div className="flex items-center">
+              <input
+                type={visible ? "text" : "password"}
+                className={getInputClass("password")}
+                placeholder="Password"
+                name="password"
+                defaultValue={formState.data?.password ?? ""}
+                onChange={(e) => validateField("password", e.target.value)}
+                required
+              />
+              <div
+                className="pl-3"
+                onClick={() => {
+                  setVisible(!visible);
+                }}
+              >
+                {visible ? <EyeOpen /> : <EyeClose />}
+              </div>
+            </div>
+
             <FormError error={getFieldError("password")} />
           </label>
           <label className="fieldset">
@@ -192,6 +203,52 @@ export default function SignupForm() {
           </p>
         </form>
       </div>
+    </>
+  );
+}
+
+export function EyeOpen() {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-eye-icon lucide-eye"
+      >
+        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    </>
+  );
+}
+export function EyeClose() {
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-eye-closed-icon lucide-eye-closed"
+      >
+        <path d="m15 18-.722-3.25" />
+        <path d="M2 8a10.645 10.645 0 0 0 20 0" />
+        <path d="m20 15-1.726-2.05" />
+        <path d="m4 15 1.726-2.05" />
+        <path d="m9 18 .722-3.25" />
+      </svg>
     </>
   );
 }

@@ -122,13 +122,3 @@ function DeleteIcon() {
     </svg>
   );
 }
-
-{
-  /* <button
-  className="btn btn-square btn-ghost h-15 w-15 rounded-2xl"
-  aria-label="Eliminar usuario"
-  onClick={() => handleDelete(user._id)}
->
-  <DeleteIcon />
-</button>; */
-}

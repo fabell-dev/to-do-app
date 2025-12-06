@@ -1,22 +1,12 @@
 const { Router } = require("express");
 const router = Router();
-const {
-  getUsers,
-  postUsers,
-  getUser,
-  updateUser,
-  deleteUser,
-} = require("../controllers/users.controller");
+const usersCtrl = require("../controllers/users.controller");
 
-router
-  .route("/")
-  .get(getUsers) //.json envia json
-  .post(postUsers);
-
-router
-  .route("/:id")
-  .get(getUser) //.send envia string
-  .put(updateUser)
-  .delete(deleteUser);
+router.get("/", usersCtrl.getUsers);
+router.post("/", usersCtrl.postUsers);
+router.get("/:id", usersCtrl.getUser);
+router.put("/:id", usersCtrl.updateUser);
+router.delete("/:id", usersCtrl.deleteUser);
+router.post("/login", usersCtrl.loginUser);
 
 module.exports = router;
