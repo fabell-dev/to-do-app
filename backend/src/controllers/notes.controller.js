@@ -1,5 +1,6 @@
 const notesCtrl = {};
 const NoteModel = require("../models/notes.model");
+const { errorResponse } = require("../utils/errorHandler");
 
 //GET(all)
 notesCtrl.getNotes = async (req, res) => {
@@ -13,11 +14,7 @@ notesCtrl.getNotes = async (req, res) => {
       count: notes.length,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error retrieving notes",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error retrieving notes", error);
   }
 };
 
@@ -26,7 +23,6 @@ notesCtrl.postNotes = async (req, res) => {
   try {
     const { title, content, author } = req.body;
 
-    // Validar campos requeridos
     if (!title || !content) {
       return res.status(400).json({
         success: false,
@@ -46,11 +42,7 @@ notesCtrl.postNotes = async (req, res) => {
       data: note,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error creating note",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error creating note", error);
   }
 };
 
@@ -72,11 +64,7 @@ notesCtrl.getNote = async (req, res) => {
       data: note,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error retrieving note",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error retrieving note", error);
   }
 };
 
@@ -108,11 +96,7 @@ notesCtrl.updateNote = async (req, res) => {
       data: note,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error updating note",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error updating note", error);
   }
 };
 
@@ -134,11 +118,7 @@ notesCtrl.deleteNote = async (req, res) => {
       data: element,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error deleting note",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error deleting note", error);
   }
 };
 

@@ -1,11 +1,12 @@
 const usersCtrl = {};
 const UserModel = require("../models/users.model");
 const bcrypt = require("bcrypt");
+const { errorResponse } = require("../utils/errorHandler");
 
 //GET(ALL)
 usersCtrl.getUsers = async (req, res) => {
   try {
-    const users = await UserModel.find().select("-password"); // Excluir password
+    const users = await UserModel.find().select("-password");
 
     return res.status(200).json({
       success: true,
@@ -14,11 +15,7 @@ usersCtrl.getUsers = async (req, res) => {
       count: users.length,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error retrieving users",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error retrieving users", error);
   }
 };
 
@@ -27,7 +24,6 @@ usersCtrl.postUsers = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
-    // Validar campos requeridos
     if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -35,7 +31,6 @@ usersCtrl.postUsers = async (req, res) => {
       });
     }
 
-    // Verificar si el usuario ya existe
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
     });
@@ -50,7 +45,6 @@ usersCtrl.postUsers = async (req, res) => {
       });
     }
 
-    // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new UserModel({
@@ -61,7 +55,6 @@ usersCtrl.postUsers = async (req, res) => {
     });
     await user.save();
 
-    // Retornar usuario sin la contraseña
     const userResponse = user.toObject();
     delete userResponse.password;
 
@@ -71,11 +64,7 @@ usersCtrl.postUsers = async (req, res) => {
       data: userResponse,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error creating user",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error creating user", error);
   }
 };
 
@@ -97,11 +86,7 @@ usersCtrl.getUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error retrieving user",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error retrieving user", error);
   }
 };
 
@@ -110,7 +95,6 @@ usersCtrl.updateUser = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
-    // Verificar si el nuevo username ya existe (excepto el mismo usuario)
     if (username) {
       const existingUser = await UserModel.findOne({
         username,
@@ -125,7 +109,6 @@ usersCtrl.updateUser = async (req, res) => {
       }
     }
 
-    // Preparar datos de actualización
     const updateData = {
       name,
       username,
@@ -133,7 +116,6 @@ usersCtrl.updateUser = async (req, res) => {
       date_modified: new Date(),
     };
 
-    // Si se envía una nueva contraseña, hashearla
     if (password && password.trim() !== "") {
       updateData.password = await bcrypt.hash(password, 10);
     }
@@ -156,11 +138,7 @@ usersCtrl.updateUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error updating user",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error updating user", error);
   }
 };
 
@@ -182,11 +160,7 @@ usersCtrl.deleteUser = async (req, res) => {
       data: element,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error deleting user",
-      error: error.message,
-    });
+    return errorResponse(res, 500, "Error deleting user", error);
   }
 };
 
@@ -201,7 +175,6 @@ usersCtrl.loginUser = async (req, res) => {
       });
     }
 
-    // Buscar usuario por email O username
     const user = await UserModel.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -213,7 +186,6 @@ usersCtrl.loginUser = async (req, res) => {
       });
     }
 
-    // Comparar contraseña usando bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -223,7 +195,6 @@ usersCtrl.loginUser = async (req, res) => {
       });
     }
 
-    // Login exitoso - retornar usuario sin contraseña
     return res.status(200).json({
       success: true,
       message: "Login exitoso",
@@ -235,10 +206,7 @@ usersCtrl.loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "Error en el servidor",
-      details: error.message,
-    });
+    return errorResponse(res, 500, "Error durante el login", error);
   }
 };
 
