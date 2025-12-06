@@ -26,7 +26,6 @@ export async function registerUserAction(
       message: undefined,
       data: fields,
       Errors: {
-        db: "",
         username: flattenedErrors.fieldErrors.username,
         email: flattenedErrors.fieldErrors.email,
         password: flattenedErrors.fieldErrors.password,
@@ -34,15 +33,14 @@ export async function registerUserAction(
       },
     };
   } else {
-    const { cpassword, ...userDataWithoutConfirm } = fields;
-    const response = await createUser(userDataWithoutConfirm);
+    const response = await createUser(fields);
     if (response.error) {
       return {
         success: false,
         message: response.error,
-        data: userDataWithoutConfirm,
+        data: fields,
         Errors: {
-          db: response.error,
+          username: [response.error],
         },
       };
     }

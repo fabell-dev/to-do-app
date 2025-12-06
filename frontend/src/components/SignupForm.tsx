@@ -3,9 +3,8 @@
 import Link from "next/link";
 import FormError from "./FormError";
 import { actions } from "@/actions";
-import { useActionState, useEffect } from "react";
-import { type FormState } from "@/validations/sign";
-import toast from "react-hot-toast";
+import { useActionState, useEffect, useState } from "react";
+import { type FormState, SignupFormSchema } from "@/validations/sign";
 
 const INITIAL_STATE: FormState = {
   success: false,
@@ -26,11 +25,88 @@ export default function SignupForm() {
     INITIAL_STATE
   );
 
-  useEffect(() => {
-    if (formState.Errors?.db) {
-      toast.error(formState.Errors.db);
+  const [fieldErrors, setFieldErrors] = useState<
+    Record<string, { hasError: boolean; message?: string }>
+  >({});
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    cpassword: "",
+  });
+
+  const validateField = (field: string, value: string) => {
+    const updatedData = { ...formData, [field]: value };
+    setFormData(updatedData);
+
+    // Validar campo individual
+    try {
+      const fieldSchema =
+        SignupFormSchema.shape[field as keyof typeof SignupFormSchema.shape];
+      if (fieldSchema) {
+        fieldSchema.parse(value);
+        setFieldErrors((prev) => ({
+          ...prev,
+          [field]: { hasError: false, message: undefined },
+        }));
+      }
+    } catch (error: any) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        [field]: {
+          hasError: true,
+          message: error.issues?.[0]?.message || "Error de validación",
+        },
+      }));
     }
-  }, [formState]);
+
+    // Validar contraseñas coincidentes en tiempo real
+    if (field === "password" || field === "cpassword") {
+      const passwordValue = field === "password" ? value : updatedData.password;
+      const cpasswordValue =
+        field === "cpassword" ? value : updatedData.cpassword;
+
+      if (cpasswordValue && passwordValue !== cpasswordValue) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          cpassword: {
+            hasError: true,
+            message: "Passwords don't match",
+          },
+        }));
+      } else if (cpasswordValue && passwordValue === cpasswordValue) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          cpassword: { hasError: false, message: undefined },
+        }));
+      }
+    }
+  };
+
+  //Cambiar nombre de clase si encuentra error
+  const getInputClass = (field: string) => {
+    if (formState.Errors?.[field as keyof typeof formState.Errors]) {
+      return "input input-error";
+    }
+    if (fieldErrors[field]?.hasError) {
+      return "input input-error";
+    }
+    return "input";
+  };
+
+  // Obtener errores del cliente y el servidor
+  const getFieldError = (field: string) => {
+    const serverError =
+      formState.Errors?.[field as keyof NonNullable<typeof formState.Errors>];
+    const clientError = fieldErrors[field]?.message;
+
+    if (serverError && Array.isArray(serverError) && serverError.length > 0) {
+      return serverError[0];
+    }
+
+    return clientError;
+  };
 
   return (
     <>
@@ -40,64 +116,69 @@ export default function SignupForm() {
           className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
           action={formAction}
         >
+          {/* NAME */}
           <label className="label">Nombre (opcional)</label>
           <input
             type="text"
-            className="input validator"
+            className={getInputClass("name")}
             placeholder="Jhon Doe"
             name="name"
             defaultValue={formState.data?.name ?? ""}
+            onChange={(e) => validateField("name", e.target.value)}
           />
-          <FormError error={formState.Errors?.name} />
+          <FormError error={getFieldError("name")} />
 
           {/* USERNAME */}
           <label className="label">Usuario</label>
           <input
             type="text"
-            className="input validator"
+            className={getInputClass("username")}
             placeholder="JhonDoe2002"
             name="username"
             defaultValue={formState.data?.username ?? ""}
+            onChange={(e) => validateField("username", e.target.value)}
             required
           />
-          <FormError error={formState.Errors?.username} />
-          <FormError error={formState?.Errors?.db} />
+          <FormError error={getFieldError("username")} />
 
           {/* EMAIL */}
           <label className="label">Email</label>
           <input
             type="email"
-            className="input validator"
+            className={getInputClass("email")}
             placeholder="Email"
             name="email"
             defaultValue={formState.data?.email ?? ""}
+            onChange={(e) => validateField("email", e.target.value)}
             required
           />
-          <FormError error={formState.Errors?.email} />
+          <FormError error={getFieldError("email")} />
 
           <label className="fieldset">
             <span className="label">Password</span>
             <input
               type="password"
-              className="input validator"
+              className={getInputClass("password")}
               placeholder="Password"
               name="password"
               defaultValue={formState.data?.password ?? ""}
+              onChange={(e) => validateField("password", e.target.value)}
               required
             />
-            <FormError error={formState.Errors?.password} />
+            <FormError error={getFieldError("password")} />
           </label>
           <label className="fieldset">
             <span className="label">Confirm Password</span>
             <input
               type="password"
-              className="input validator"
+              className={getInputClass("cpassword")}
               placeholder="Confirm Password"
               name="cpassword"
               defaultValue={formState.data?.cpassword ?? ""}
+              onChange={(e) => validateField("cpassword", e.target.value)}
               required
             />
-            <FormError error={formState.Errors?.cpassword} />
+            <FormError error={getFieldError("cpassword")} />
           </label>
 
           <button className="btn btn-neutral mt-4" type="submit">

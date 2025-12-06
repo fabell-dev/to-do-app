@@ -54,7 +54,6 @@ export type FormState = {
     cpassword?: string;
   };
   Errors?: {
-    db?: string;
     username?: string[];
     name?: string[];
     lastname?: string[];
