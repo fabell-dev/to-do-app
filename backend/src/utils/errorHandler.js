@@ -13,4 +13,4 @@ const errorResponse = (res, statusCode, message, error = null) => {
   return res.status(statusCode).json(response);
 };
 
-module.exports = { errorResponse };
+export default errorResponse;

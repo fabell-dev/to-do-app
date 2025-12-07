@@ -1,5 +1,4 @@
-const { Timestamp } = require("mongodb");
-const { Schema, Model, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const noteSchema = new Schema({
   title: {
@@ -10,6 +9,8 @@ const noteSchema = new Schema({
     type: String,
     required: true,
   },
+  date_created: { type: Date, default: Date.now },
+  date_modified: { type: Date },
 });
 
-module.exports = model("note", noteSchema);
+export default model("note", noteSchema);

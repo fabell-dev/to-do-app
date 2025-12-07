@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const URL = process.env.MONGO_URL;
 
 mongoose
@@ -21,4 +21,4 @@ connection.on("error", (error) => {
   console.error("MongoDB connection error:", error);
 });
 
-module.exports = connection;
+export default connection;

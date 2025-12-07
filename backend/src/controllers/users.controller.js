@@ -1,12 +1,13 @@
+import User from "../models/users.model.js";
+import errorResponse from "../utils/errorHandler.js";
+import bcrypt from "bcryptjs";
+
 const usersCtrl = {};
-const UserModel = require("../models/users.model");
-const bcrypt = require("bcrypt");
-const { errorResponse } = require("../utils/errorHandler");
 
 //GET(ALL)
 usersCtrl.getUsers = async (req, res) => {
   try {
-    const users = await UserModel.find().select("-password");
+    const users = await User.find().select("-password");
 
     return res.status(200).json({
       success: true,
@@ -31,7 +32,7 @@ usersCtrl.postUsers = async (req, res) => {
       });
     }
 
-    const existingUser = await UserModel.findOne({
+    const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });
 
@@ -47,7 +48,7 @@ usersCtrl.postUsers = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new UserModel({
+    const user = new User({
       name,
       username,
       email,
@@ -71,7 +72,7 @@ usersCtrl.postUsers = async (req, res) => {
 //GET(ONE)
 usersCtrl.getUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id).select("-password");
+    const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -96,7 +97,7 @@ usersCtrl.updateUser = async (req, res) => {
     const { name, username, email, password } = req.body;
 
     if (username) {
-      const existingUser = await UserModel.findOne({
+      const existingUser = await User.findOne({
         username,
         _id: { $ne: req.params.id },
       });
@@ -120,7 +121,7 @@ usersCtrl.updateUser = async (req, res) => {
       updateData.password = await bcrypt.hash(password, 10);
     }
 
-    const user = await UserModel.findByIdAndUpdate(req.params.id, updateData, {
+    const user = await User.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
     }).select("-password");
@@ -145,7 +146,7 @@ usersCtrl.updateUser = async (req, res) => {
 //DELETE
 usersCtrl.deleteUser = async (req, res) => {
   try {
-    const element = await UserModel.findByIdAndDelete(req.params.id);
+    const element = await User.findByIdAndDelete(req.params.id);
 
     if (!element) {
       return res.status(404).json({
@@ -175,7 +176,7 @@ usersCtrl.loginUser = async (req, res) => {
       });
     }
 
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
 
@@ -210,4 +211,4 @@ usersCtrl.loginUser = async (req, res) => {
   }
 };
 
-module.exports = usersCtrl;
+export default usersCtrl;

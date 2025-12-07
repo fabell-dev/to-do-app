@@ -1,11 +1,11 @@
+import Note from "../models/notes.model.js";
+import errorResponse from "../utils/errorHandler.js";
 const notesCtrl = {};
-const NoteModel = require("../models/notes.model");
-const { errorResponse } = require("../utils/errorHandler");
 
 //GET(all)
 notesCtrl.getNotes = async (req, res) => {
   try {
-    const notes = await NoteModel.find();
+    const notes = await Note.find();
 
     return res.status(200).json({
       success: true,
@@ -30,7 +30,7 @@ notesCtrl.postNotes = async (req, res) => {
       });
     }
 
-    const note = new NoteModel({
+    const note = new Note({
       title,
       content,
     });
@@ -49,7 +49,7 @@ notesCtrl.postNotes = async (req, res) => {
 //GET(id)
 notesCtrl.getNote = async (req, res) => {
   try {
-    const note = await NoteModel.findById(req.params.id);
+    const note = await Note.findById(req.params.id);
 
     if (!note) {
       return res.status(404).json({
@@ -73,7 +73,7 @@ notesCtrl.updateNote = async (req, res) => {
   try {
     const { title, content, author } = req.body;
 
-    const note = await NoteModel.findByIdAndUpdate(
+    const note = await Note.findByIdAndUpdate(
       req.params.id,
       {
         title,
@@ -103,7 +103,7 @@ notesCtrl.updateNote = async (req, res) => {
 //DELETE
 notesCtrl.deleteNote = async (req, res) => {
   try {
-    const element = await NoteModel.findByIdAndDelete(req.params.id);
+    const element = await Note.findByIdAndDelete(req.params.id);
 
     if (!element) {
       return res.status(404).json({
@@ -122,4 +122,4 @@ notesCtrl.deleteNote = async (req, res) => {
   }
 };
 
-module.exports = notesCtrl;
+export default notesCtrl;

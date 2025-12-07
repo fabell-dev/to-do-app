@@ -1,22 +1,16 @@
-const { Router } = require("express");
+import { Router } from "express";
+import notesCtrl from "../controllers/notes.controller.js";
+
 const router = Router();
-const {
-  getNotes,
-  postNotes,
-  getNote,
-  updateNote,
-  deleteNote,
-} = require("../controllers/notes.controller");
 
-router
-  .route("/")
-  .get(getNotes) //.json envia json
-  .post(postNotes);
+//ALL
+router.route("/").get(notesCtrl.getNotes).post(notesCtrl.postNotes);
 
+//ONE
 router
   .route("/:id")
-  .get(getNote) //.send envia string
-  .put(updateNote)
-  .delete(deleteNote);
+  .get(notesCtrl.getNote)
+  .put(notesCtrl.updateNote)
+  .delete(notesCtrl.deleteNote);
 
-module.exports = router;
+export default router;

@@ -1,22 +1,19 @@
-const { Timestamp } = require("mongodb");
-const { Schema, Model, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
   name: {
     type: String,
-    required: false,
-    trim: true, //Limpia espacios innecesarios
+    required: true,
   },
   username: {
     type: String,
     required: true,
-    trim: true, //Limpia espacios innecesarios
-    unique: true, //Se explica sola
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true, //Se explica sola
+    unique: true,
   },
   password: {
     type: String,
@@ -26,4 +23,4 @@ const userSchema = new Schema({
   date_modified: { type: Date },
 });
 
-module.exports = model("user", userSchema);
+export default model("User", userSchema);
